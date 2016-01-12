@@ -1,4 +1,12 @@
 
+/**
+ * Standing ISSUE With This
+ * Assumes knowledge of setMode (display/edit) within the component level.
+ * Simple for this, but multiple components could toggle off this mode
+ * since the store is centralized and we aren't using local state for only
+ * this component's mode.
+ */
+
 const helloFactory = function ({ React }) {
 
   // Define our property types.
@@ -50,7 +58,8 @@ const helloFactory = function ({ React }) {
         // based on current mode.
         const styles = {
           displayMode: {
-            display: (mode === 'display') ? 'inline' : 'none'
+            display: (mode === 'display') ? 'inline' : 'none',
+            cursor: 'pointer'
           },
 
           editMode: {
@@ -79,6 +88,11 @@ const helloFactory = function ({ React }) {
               style = { styles.editMode }
               placeholder = { word }
               onKeyUp = { onKeyUp } />
+            <button
+              ref = "closeInput"
+              style = { styles.editMode }
+              onClick = { () => setMode('display') }
+              >&times;</button>
           </p>
         )
       }

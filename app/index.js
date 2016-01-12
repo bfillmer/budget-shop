@@ -1,45 +1,54 @@
 
-/**
- * App's entry point
- * Creates and inserts a div and mounts the app on it
- */
+// Style Imports
 import 'normalize.css'
-import styles from './styles.css'
+import './styles.scss'
 
-import debug from 'debug'
-import React from 'react'
-import ReactDOM from 'react-dom'
-
-import List from './components/List'
-import Total from './components/Total'
-
-import data from './data-store'
-
-const log = debug('app:bootstrap')
-
-// Enable debug messages outside of production
-if (process.env.NODE_ENV !== 'production') {
-  debug.enable('app:*')
-}
-
-log('Creating Application Node')
+// Create our application node on the body to hook the application to.
 const appNode = document.createElement('div')
-appNode.className = styles.app
+appNode.className = 'app'
 appNode.id = 'app'
-
-log('Adding Application Node to Body')
 document.body.appendChild(appNode)
 
-// Create primary application wrapper.
-const BudgetShopApp = (props) => {
-  return (
-    <div className="budgetApp">
-      <List items={props.data.items} />
-      <Total />
-    </div>
+// Core Imports
+import React from 'react'
+import ReactDOM from 'react-dom'
+import helloFactory from './components/Hello'
+
+// Create our Hello React Component
+const Hello = helloFactory({ React })
+
+// Data store.
+let store = {
+  word: 'world',
+  mode: 'display'
+}
+
+// Define our application render function.
+let render
+
+// Define our store actions.
+const actions = {
+  setWord (w) {
+    store.word = w
+    render()
+  },
+
+  setMode (m) {
+    store.mode = m
+    render()
+  }
+}
+
+// Flesh out render containing our React application.
+render = function () {
+  ReactDOM.render(
+    <Hello
+      word = { store.word }
+      mode = { store.mode }
+      actions = { actions } />,
+      appNode
   )
 }
 
-ReactDOM.render(<BudgetShopApp data={data} />, appNode, () => {
-  log('Budget Application Mounted')
-})
+// Render our application.
+render()

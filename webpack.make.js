@@ -202,6 +202,13 @@ module.exports = function makeWebpackConfig (options) {
   // Add localCssLoader and globalCssLoader to the loader list
   config.module.loaders.push(localCssLoader, globalCssLoader)
 
+  var globalSASSLoader = {
+    test: /\.scss$/,
+    loader: 'style!css!sass'
+  }
+
+  config.module.loaders.push(globalSASSLoader)
+
   /**
    * PostCSS
    * Reference: https://github.com/postcss/autoprefixer-core

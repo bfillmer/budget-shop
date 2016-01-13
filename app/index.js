@@ -17,14 +17,27 @@ import helloFactory from './components/Hello'
 // Create our Hello React Component
 const Hello = helloFactory({ React })
 
+// Actions (Temp duplicated in Hello.js)
+// Would be imported to both files.
+const EDIT_MODE = 'EDIT'
+const DISPLAY_MODE = 'DISPLAY'
+
 // Data store.
 let store = {
   word: 'world',
-  mode: 'display'
+  mode: DISPLAY_MODE
 }
 
 // Define our application render function.
 let render
+
+// Standard mode setting function for composition.
+const setMode = function (m) {
+  return () => {
+    store.mode = m
+    render()
+  }
+}
 
 // Define our store actions.
 const actions = {
@@ -33,10 +46,11 @@ const actions = {
     render()
   },
 
-  setMode (m) {
-    store.mode = m
-    render()
-  }
+  // setMode: setMode,
+
+  editMode: setMode(EDIT_MODE),
+
+  displayMode: setMode(DISPLAY_MODE)
 }
 
 // Flesh out render containing our React application.

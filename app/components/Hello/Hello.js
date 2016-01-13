@@ -5,7 +5,17 @@
  * Simple for this, but multiple components could toggle off this mode
  * since the store is centralized and we aren't using local state for only
  * this component's mode.
+ *
+ * Perhaps accepting displayMode & editMode instead, which are then set closer to
+ * store level based on function calls. Then also requiring functions setDisplayMode
+ * & setEditMode. These are composable @ data store level wrapping our strings (effectively
+ * our action type in Redux think).
  */
+
+// Actions (Temp duplicated in index.js)
+// Would be imported to both files.
+const EDIT_MODE = 'EDIT'
+const DISPLAY_MODE = 'DISPLAY'
 
 const helloFactory = function ({ React }) {
 
@@ -26,7 +36,8 @@ const helloFactory = function ({ React }) {
 
       actions: React.PropTypes.shape({
         setWord: func.isRequired,
-        setMode: func.isRequired
+        editMode: func.isRequired,
+        displayMode: func.isRequired
       })
     }
 
@@ -50,20 +61,21 @@ const helloFactory = function ({ React }) {
 
         // Actions this component can perform.
         const {
-          setMode,
-          setWord
+          setWord,
+          editMode,
+          displayMode
         } = this.props.actions
 
         // Inline styles. Apparently the new cool. Toggles basic styles
         // based on current mode.
         const styles = {
           displayMode: {
-            display: (mode === 'display') ? 'inline' : 'none',
+            display: (mode === DISPLAY_MODE) ? 'inline' : 'none', // Dependent on knowledge of string for current mode
             cursor: 'pointer'
           },
 
           editMode: {
-            display: (mode === 'edit') ? 'inline' : 'none'
+            display: (mode === EDIT_MODE) ? 'inline' : 'none'  // Dependent on knowledge of string for current mode
           }
         }
 
@@ -73,7 +85,7 @@ const helloFactory = function ({ React }) {
           if (e.key !== 'Enter') return
 
           setWord(e.target.value)
-          setMode('display')
+          displayMode()
         }
 
         // Return our JSX goodness.
@@ -81,7 +93,7 @@ const helloFactory = function ({ React }) {
           <p>Hello,&nbsp;
             <span
               style = { styles.displayMode }
-              onClick = { () => setMode('edit') }
+              onClick = { () => editMode() }
               >{ word }!</span>
             <input
               ref = "wordInput"
@@ -91,7 +103,7 @@ const helloFactory = function ({ React }) {
             <button
               ref = "closeInput"
               style = { styles.editMode }
-              onClick = { () => setMode('display') }
+              onClick = { () => displayMode() }
               >&times;</button>
           </p>
         )
